@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Tic-Tac-Toe game by Victoriah Meyer
+//
+using System;
 using System.Collections.Generic;
 
 namespace TicTacToe // Note: actual namespace depends on the project name.
@@ -7,28 +9,40 @@ namespace TicTacToe // Note: actual namespace depends on the project name.
     {
         static void Main(string[] args)
         {
-            //Create board
-            List<char> board = new List<char> {'1','2','3','4','5','6','7','8','9'};
-            
-            char player = 'x';
-            bool winner = DetermineWinner(board, player);
-            //while no winner or tie
-            while (winner == false){
-                //Display board
-                DisplayBoard(board);
-
-                //Get input
-                int userInput = GetInput(player);
-
-                //Update board
-                UpdateBoard(board, player, userInput);
-
-                //switch players
-                player = SwitchPlayer(player);
+            bool playAgain = true;
+            while(playAgain == true){
+                //Create board
+                List<char> board = new List<char> {'1','2','3','4','5','6','7','8','9'};
                 
-                //check for winner
-                winner = DetermineWinner(board, player);
+                //initiate variables
+                char player = 'x';
+                int num_turns = 0;
+                bool winner = DetermineWinner(board, player, num_turns);
+                
+
+                //while no winner or tie
+                while (winner == false){
+                    num_turns++;
+
+                    //Display board
+                    DisplayBoard(board);
+
+                    //Get input
+                    int userInput = GetInput(board, player);
+
+                    //Update board
+                    UpdateBoard(board, player, userInput);
+
+                    //switch players
+                    player = SwitchPlayer(player);
+                    
+                    //check for winner
+                    winner = DetermineWinner(board, player, num_turns);
+
+                }
+                playAgain = EndGame(player, playAgain);
             }
+            
         }
 
         static void DisplayBoard(List<char> board)
@@ -40,12 +54,33 @@ namespace TicTacToe // Note: actual namespace depends on the project name.
             Console.WriteLine($"{board[6]} | {board[7]} | {board[8]}");
         }
 
-        static int GetInput(char player)
+        static int GetInput(List<char> board,char player)
         {
-            Console.WriteLine($"{player}'s turn to choose a square(1-9): ");
+            bool valid = false;
+            Console.Write($"\n{player}'s turn to choose a square(1-9): ");
             string userInputStr = Console.ReadLine();
             int userInput = int.Parse(userInputStr);
+
+            while (valid == false)
+            { 
+                if (userInput >= 1 && userInput <= 9){
+                    valid = true;
+                }
+                else if (board[userInput]=='x' || board[userInput]=='o'){
+                    Console.WriteLine($"I'm sorry, that square is already taken. Choose another square: ");
+                    userInputStr = Console.ReadLine();
+                    userInput = int.Parse(userInputStr);
+                    valid = false;
+                }
+                else{
+                    Console.Write($"I'm sorry, {userInput} is not a valid input. Choose another square: ");
+                    userInputStr = Console.ReadLine();
+                    userInput = int.Parse(userInputStr);
+                    valid = false;
+                }
+            }
             return userInput;
+
         }
 
         static void UpdateBoard(List<char> board, char player, int userInput)
@@ -70,7 +105,7 @@ namespace TicTacToe // Note: actual namespace depends on the project name.
             return player;
         }
 
-        static bool DetermineWinner(List<char> board, char player)
+        static bool DetermineWinner(List<char> board, char player, int num_turns)
         {
             if((player == board[0] && player == board[1] && player == board[2])
             ||(player == board[3] && player == board[4] && player == board[5])
@@ -81,10 +116,28 @@ namespace TicTacToe // Note: actual namespace depends on the project name.
             ||(player == board[0] && player == board[4] && player == board[8])
             ||(player == board[2] && player == board[4] && player == board[6])){
                 return true;}
+            else if (num_turns >= 9){
+                Console.WriteLine("You have tied.");
+                return true;
+            }
             else {
                 return false;
             }
+        }
+        static bool EndGame(char player, bool playAgain)
+        {
+            Console.WriteLine($"Player {player} wins! Thanks for playing.");
             
+            Console.WriteLine("Would you like to play again? (yes/no): ");
+            string playAgainStr = Console.ReadLine();
+            
+            if (playAgainStr == "yes"){
+                playAgain = true;
+            }
+            else{
+                playAgain = false;
+            }
+            return playAgain;
         }
 
     }
