@@ -1,16 +1,17 @@
-﻿//Tic-Tac-Toe game by Victoriah Meyer
-//
+﻿/*
+Tic-Tac-Toe game by Victoriah Meyer
+*/
 using System;
 using System.Collections.Generic;
 
-namespace TicTacToe // Note: actual namespace depends on the project name.
+namespace TicTacToe // Tic Tac Toe game
 {
     internal class Program
     {
         static void Main(string[] args)
         {
             bool playAgain = true;
-            while(playAgain == true){
+            while(playAgain == true){ 
                 //Create board
                 List<char> board = new List<char> {'1','2','3','4','5','6','7','8','9'};
                 
@@ -19,7 +20,6 @@ namespace TicTacToe // Note: actual namespace depends on the project name.
                 int num_turns = 0;
                 bool winner = DetermineWinner(board, player, num_turns);
                 
-
                 //while no winner or tie
                 while (winner == false){
                     num_turns++;
@@ -40,6 +40,7 @@ namespace TicTacToe // Note: actual namespace depends on the project name.
                     winner = DetermineWinner(board, player, num_turns);
 
                 }
+                //ask player if they want to play again
                 playAgain = EndGame(player, playAgain);
             }
             
@@ -56,22 +57,28 @@ namespace TicTacToe // Note: actual namespace depends on the project name.
 
         static int GetInput(List<char> board,char player)
         {
+            //variable valid to check for invalid inputs
             bool valid = false;
+            //get the user input and change to int
             Console.Write($"\n{player}'s turn to choose a square(1-9): ");
             string userInputStr = Console.ReadLine();
             int userInput = int.Parse(userInputStr);
 
+            //run until user input is valid
             while (valid == false)
             { 
                 if (userInput >= 1 && userInput <= 9){
+                    //exit while loop
                     valid = true;
                 }
+                //if the square is already taken, get new input
                 else if (board[userInput]=='x' || board[userInput]=='o'){
                     Console.WriteLine($"I'm sorry, that square is already taken. Choose another square: ");
                     userInputStr = Console.ReadLine();
                     userInput = int.Parse(userInputStr);
                     valid = false;
                 }
+                //if the user types anything else, get new input
                 else{
                     Console.Write($"I'm sorry, {userInput} is not a valid input. Choose another square: ");
                     userInputStr = Console.ReadLine();
@@ -80,12 +87,11 @@ namespace TicTacToe // Note: actual namespace depends on the project name.
                 }
             }
             return userInput;
-
         }
 
         static void UpdateBoard(List<char> board, char player, int userInput)
         {
-            //if player is x, change the board[userinput-1] to x
+            //if player is x, change the square to x
             if (player == 'x'){
                 board[userInput-1] = 'x';
             }
@@ -115,7 +121,9 @@ namespace TicTacToe // Note: actual namespace depends on the project name.
             ||(player == board[2] && player == board[5] && player == board[8])
             ||(player == board[0] && player == board[4] && player == board[8])
             ||(player == board[2] && player == board[4] && player == board[6])){
-                return true;}
+                return true;
+            }
+            //check if a tie by the number of turns
             else if (num_turns >= 9){
                 Console.WriteLine("You have tied.");
                 return true;
@@ -126,8 +134,9 @@ namespace TicTacToe // Note: actual namespace depends on the project name.
         }
         static bool EndGame(char player, bool playAgain)
         {
+            //the last player to input is the winner
             Console.WriteLine($"Player {player} wins! Thanks for playing.");
-            
+            //ask the player if they want to play again
             Console.WriteLine("Would you like to play again? (yes/no): ");
             string playAgainStr = Console.ReadLine();
             
