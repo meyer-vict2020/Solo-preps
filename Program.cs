@@ -41,7 +41,7 @@ namespace TicTacToe // Tic Tac Toe game
 
                 }
                 //ask player if they want to play again
-                playAgain = EndGame(player, playAgain);
+                playAgain = EndGame(player, playAgain, num_turns);
             }
             
         }
@@ -125,17 +125,22 @@ namespace TicTacToe // Tic Tac Toe game
             }
             //check if a tie by the number of turns
             else if (num_turns >= 9){
-                Console.WriteLine("You have tied.");
                 return true;
             }
             else {
                 return false;
             }
         }
-        static bool EndGame(char player, bool playAgain)
+        static bool EndGame(char player, bool playAgain, int num_turns)
         {
-            //the last player to input is the winner
-            Console.WriteLine($"Player {player} wins! Thanks for playing.");
+            if (num_turns >= 9){
+                Console.WriteLine("You have tied.");
+            }
+            else{
+                //the last player to input is the winner
+                Console.WriteLine($"Player {player} wins! Thanks for playing.");
+            }
+            
             //ask the player if they want to play again
             Console.WriteLine("Would you like to play again? (yes/no): ");
             string playAgainStr = Console.ReadLine();
